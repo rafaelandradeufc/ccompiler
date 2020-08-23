@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define ICMS 0.18
+#define MAX 100
+#define ERRO "Erro!!!"
 
 void main(){
 
@@ -18,17 +21,16 @@ int 1t;
 int z;
 double f;
 float a;
-char c;
-
+char c;)
 int x = 0;
 int y = 1;
 
-int z;
+int z;)
 double f1;
 float a;
 char c;
 
-scanf("%d",&z);
+scanf("%d",&z ) ;
 
 while(x%2==0){
 
