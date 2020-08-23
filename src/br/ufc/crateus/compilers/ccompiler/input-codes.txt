@@ -1,0 +1,60 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+
+void main(){
+
+short int d;
+long long int x1;
+long int asdadsa;
+int 1 = 0;
+int x = 0;
+int y1 = 1;
+long teste15454544 = 2;
+long ;
+x=1
+int 1;
+int 1t;
+int z;
+double f;
+float a;
+char c;
+
+int x = 0;
+int y = 1;
+
+int z;
+double f1;
+float a;
+char c;
+
+scanf("%d",&z);
+
+while(x%2==0){
+
+}
+
+for(z=0;z>=0;z++){
+
+z--;
+
+}
+
+
+x = x + y;
+
+if (x == y || x != z || z > 0 || z < 0 || z >= 0 || z <= 0){
+    z = x;
+    f = y;
+} else {
+"dd"
+printf("o VALOR DE X É:çç:-/",x);
+
+}
+
+
+}
+
+
+
+
