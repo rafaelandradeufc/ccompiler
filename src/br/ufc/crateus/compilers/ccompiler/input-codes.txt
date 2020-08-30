@@ -5,9 +5,8 @@
 #define MAX 100
 #define ERRO "Erro!!!"
 
-void main(){
+void main)({
 
-short int d;
 long long int x1;
 long int asdadsa;
 int 1 = 0;
@@ -25,6 +24,9 @@ char c;)
 int x = 0;
 int y = 1;
 
+do {
+
+}
 int z;)
 double f1;
 float a;

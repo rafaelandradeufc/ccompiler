@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -11,7 +12,7 @@ public class LexicalAnalyzer {
 
 	public static void main(String[] args) {
 
-		HashMap<String, String> table = new HashMap<>();
+		HashMap<Token, String> table = new LinkedHashMap<Token, String>();
 
 		try {
 			FileReader arqCodes = new FileReader("src/br/ufc/crateus/compilers/ccompiler/input-codes.txt");
@@ -22,14 +23,13 @@ public class LexicalAnalyzer {
 			String primitiveTypes = "long long int|long int|short int|long double|float|double|char|int";
 			String variables = "(" + primitiveTypes + ") [a-zA-Z]+[0-9]*";
 			String conditionals = "if|else|switch";
-			String arithmeticOperators = "\\/|\\*|\\-|\\+|%";
+			String arithmeticOperators = "\\/|\\*|\\-|\\+|\\%";
 			String relationalOperators = "==|!=|>=|<=|>|<";
 			String logicalOperators = "\\|\\||&&|!";
-			String assignmentCommand = "=";
+			String assignmentCommand = " = ";
 			String constants = "[0-9]+";
 			String delimiters = "[;:,\\)\\(#@]";
 			String commandBlocks = "\\{|\\}";
-			
 
 			Pattern patternStrings = Pattern.compile(strings, Pattern.MULTILINE);
 			Pattern patternVariables = Pattern.compile(variables, Pattern.MULTILINE);
@@ -41,10 +41,11 @@ public class LexicalAnalyzer {
 			Pattern patternConstants = Pattern.compile(constants, Pattern.MULTILINE);
 			Pattern patternDelimiters = Pattern.compile(delimiters, Pattern.MULTILINE);
 			Pattern patternCommandBlocks = Pattern.compile(commandBlocks, Pattern.MULTILINE);
-			
-			
+
 			String lineCodes = lerArqCodes.readLine();
 
+			int lineCounts = 1;
+			
 			while (lineCodes != null) {
 
 				FileReader arqReserveds = new FileReader("src/br/ufc/crateus/compilers/ccompiler/reserved-words.txt");
@@ -52,23 +53,23 @@ public class LexicalAnalyzer {
 				BufferedReader lerArqReserveds = new BufferedReader(arqReserveds);
 
 				String lineReserveds = lerArqReserveds.readLine();
-				
+
 				/** Strings **/
 				Matcher matcherStrings = patternStrings.matcher(lineCodes);
 
-				if (matcherStrings.find()) {
-					//table.put(matcherStrings.group(0), "Strings");
+				while (matcherStrings.find()) {
+					table.put(new Token(matcherStrings.group(0),lineCounts), "Strings");
 					lineCodes = matcherStrings.replaceAll("");
 				}
 
 				/** Reserveds **/
 				while (lineReserveds != null) {
 
-					Pattern patternReserveds = Pattern.compile(lineReserveds.trim(), Pattern.MULTILINE);
+					Pattern patternReserveds = Pattern.compile(lineReserveds, Pattern.MULTILINE);
 					Matcher matcherReserveds = patternReserveds.matcher(lineCodes);
 
-					if (matcherReserveds.find()) {
-						 table.put(matcherReserveds.group(0), "Palavra-Chave");
+					while (matcherReserveds.find()) {
+						table.put(new Token(matcherReserveds.group(0), lineCounts), "Palavra-Chave");
 					}
 
 					lineReserveds = lerArqReserveds.readLine();
@@ -78,74 +79,77 @@ public class LexicalAnalyzer {
 				/** Variables **/
 				Matcher matcherVariables = patternVariables.matcher(lineCodes);
 
-				if (matcherVariables.find()) {
+				while (matcherVariables.find()) {
 
 					String variableAux[] = matcherVariables.group(0).trim().split(" ");
 
-					 table.put(variableAux[variableAux.length - 1], "Identificador");
+					table.put(new Token(variableAux[variableAux.length - 1], lineCounts), "Identificador");
 
 				}
-				
-				
+
 				/** Conditionals **/
 				Matcher matcherConditionals = patternConditionals.matcher(lineCodes);
-				
-				if(matcherConditionals.find()) {
-					table.put(matcherConditionals.group(0).trim(), "Condicionals");	
+
+				while (matcherConditionals.find()) {
+					table.put(new Token(matcherConditionals.group(0).trim(), lineCounts), "Condicionals" );
 				}
-				
+
 				/** Arithmetic Operators **/
+
 				Matcher matcherArithmeticOperators = patternArithmeticOperators.matcher(lineCodes);
-				
-				if(matcherArithmeticOperators.find()) {
-					table.put(matcherArithmeticOperators.group(0).trim(), "Arithmetic Operators");	
+
+				while (matcherArithmeticOperators.find()) {
+					table.put(new Token(matcherArithmeticOperators.group(0).trim(), lineCounts), "Arithmetic Operators");
 				}
-				
+
 				/** Relational Operators **/
+
 				Matcher matcherRelationalOperators = patternRelationalOperators.matcher(lineCodes);
-				
-				if(matcherRelationalOperators.find()) {
-					table.put(matcherRelationalOperators.group(0).trim(), "Relational Operators");	
+
+				while (matcherRelationalOperators.find()) {
+					table.put(new Token(matcherRelationalOperators.group(0).trim(),lineCounts), "Relational Operators");
 				}
-				
+
 				/** Logical Operators **/
 				Matcher matcherLogicalOperators = patternLogicalOperators.matcher(lineCodes);
-				
-				if(matcherLogicalOperators.find()) {
-					table.put(matcherLogicalOperators.group(0).trim(), "Arithmetic Operators");	
+
+				while (matcherLogicalOperators.find()) {
+					table.put(new Token(matcherLogicalOperators.group(0).trim(),lineCounts), "Logical Operators" );
 				}
-				
+
 				/** Assignment Command **/
 				Matcher matcherAssignmentCommand = patternAssignmentCommand.matcher(lineCodes);
-				
-				if(matcherAssignmentCommand.find()) {
-					table.put(matcherAssignmentCommand.group(0).trim(), "Assignment Command");	
+
+				while (matcherAssignmentCommand.find()) {
+					table.put(new Token(matcherAssignmentCommand.group(0), lineCounts), "Assignment Command");
 				}
-				
+
 				/** Constants **/
+
 				Matcher matcherConstants = patternConstants.matcher(lineCodes);
-				
-				if(matcherConstants.find()) {
-					table.put(matcherConstants.group(0).trim(), "Constants");	
+
+				if (matcherConstants.find()) {
+					table.put(new Token(matcherConstants.group(0).trim(), lineCounts), "Constants");
 				}
-				
+
 				/** Delimiters **/
+
 				Matcher matcherDelimiters = patternDelimiters.matcher(lineCodes);
-				
-				if(matcherDelimiters.find()) {
-					table.put(matcherDelimiters.group(0).trim(), "Delimiters");	
+
+				if (matcherDelimiters.find()) {
+
+					table.put(new Token(matcherDelimiters.group(0).trim(), lineCounts), "Delimiters");
 				}
-				
+
 				/** Command Blocks **/
 				Matcher matcherCommandBlocks = patternCommandBlocks.matcher(lineCodes);
-				
-				if(matcherCommandBlocks.find()) {
-					table.put(matcherCommandBlocks.group(0).trim(), "Command Blocks");	
+
+				while (matcherCommandBlocks.find()) {
+					table.put(new Token(matcherCommandBlocks.group(0).trim(), lineCounts), "Command Blocks");
 				}
-				
-				
-				
+
 				lineCodes = lerArqCodes.readLine();
+				lineCounts++;
 			}
 
 			table.forEach((key, value) -> System.out.println(value + " : " + key));
