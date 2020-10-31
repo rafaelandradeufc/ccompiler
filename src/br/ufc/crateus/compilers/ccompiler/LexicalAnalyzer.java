@@ -10,9 +10,9 @@ import java.util.regex.Pattern;
 
 public class LexicalAnalyzer {
 
-	public static void main(String[] args) {
+	public HashMap<Token, String> init() {
 
-		HashMap<Token, String> table = new LinkedHashMap<Token, String>();
+		HashMap<Token, String> table = new HashMap<Token, String>();
 
 		try {
 			FileReader arqCodes = new FileReader("src/br/ufc/crateus/compilers/ccompiler/input-codes.txt");
@@ -58,7 +58,7 @@ public class LexicalAnalyzer {
 				Matcher matcherStrings = patternStrings.matcher(lineCodes);
 
 				while (matcherStrings.find()) {
-					table.put(new Token(matcherStrings.group(0),lineCounts), "Strings");
+					table.put(new Token(matcherStrings.group(0),lineCounts), "String");
 					lineCodes = matcherStrings.replaceAll("");
 				}
 
@@ -69,7 +69,7 @@ public class LexicalAnalyzer {
 					Matcher matcherReserveds = patternReserveds.matcher(lineCodes);
 
 					while (matcherReserveds.find()) {
-						table.put(new Token(matcherReserveds.group(0), lineCounts), "Palavra-Chave");
+						table.put(new Token(matcherReserveds.group(0), lineCounts), "Keyword");
 					}
 
 					lineReserveds = lerArqReserveds.readLine();
@@ -91,7 +91,7 @@ public class LexicalAnalyzer {
 				Matcher matcherConditionals = patternConditionals.matcher(lineCodes);
 
 				while (matcherConditionals.find()) {
-					table.put(new Token(matcherConditionals.group(0).trim(), lineCounts), "Condicionals" );
+					table.put(new Token(matcherConditionals.group(0).trim(), lineCounts), "Condicional" );
 				}
 
 				/** Arithmetic Operators **/
@@ -99,7 +99,7 @@ public class LexicalAnalyzer {
 				Matcher matcherArithmeticOperators = patternArithmeticOperators.matcher(lineCodes);
 
 				while (matcherArithmeticOperators.find()) {
-					table.put(new Token(matcherArithmeticOperators.group(0).trim(), lineCounts), "Arithmetic Operators");
+					table.put(new Token(matcherArithmeticOperators.group(0).trim(), lineCounts), "Arithmetic Operator");
 				}
 
 				/** Relational Operators **/
@@ -107,14 +107,14 @@ public class LexicalAnalyzer {
 				Matcher matcherRelationalOperators = patternRelationalOperators.matcher(lineCodes);
 
 				while (matcherRelationalOperators.find()) {
-					table.put(new Token(matcherRelationalOperators.group(0).trim(),lineCounts), "Relational Operators");
+					table.put(new Token(matcherRelationalOperators.group(0).trim(),lineCounts), "Relational Operator");
 				}
 
 				/** Logical Operators **/
 				Matcher matcherLogicalOperators = patternLogicalOperators.matcher(lineCodes);
 
 				while (matcherLogicalOperators.find()) {
-					table.put(new Token(matcherLogicalOperators.group(0).trim(),lineCounts), "Logical Operators" );
+					table.put(new Token(matcherLogicalOperators.group(0).trim(),lineCounts), "Logical Operator" );
 				}
 
 				/** Assignment Command **/
@@ -129,7 +129,7 @@ public class LexicalAnalyzer {
 				Matcher matcherConstants = patternConstants.matcher(lineCodes);
 
 				if (matcherConstants.find()) {
-					table.put(new Token(matcherConstants.group(0).trim(), lineCounts), "Constants");
+					table.put(new Token(matcherConstants.group(0).trim(), lineCounts), "Constant");
 				}
 
 				/** Delimiters **/
@@ -137,22 +137,19 @@ public class LexicalAnalyzer {
 				Matcher matcherDelimiters = patternDelimiters.matcher(lineCodes);
 
 				if (matcherDelimiters.find()) {
-
-					table.put(new Token(matcherDelimiters.group(0).trim(), lineCounts), "Delimiters");
+					table.put(new Token(matcherDelimiters.group(0).trim(), lineCounts), "Delimiter");
 				}
 
 				/** Command Blocks **/
 				Matcher matcherCommandBlocks = patternCommandBlocks.matcher(lineCodes);
 
 				while (matcherCommandBlocks.find()) {
-					table.put(new Token(matcherCommandBlocks.group(0).trim(), lineCounts), "Command Blocks");
+					table.put(new Token(matcherCommandBlocks.group(0).trim(), lineCounts), "Command Block");
 				}
 
 				lineCodes = lerArqCodes.readLine();
 				lineCounts++;
 			}
-
-			table.forEach((key, value) -> System.out.println(value + " : " + key));
 
 			arqCodes.close();
 
@@ -160,6 +157,7 @@ public class LexicalAnalyzer {
 			System.err.printf("Erro na abertura do arquivo: %s.\n", e.getMessage());
 		}
 
+		return table;
 	}
 
 }
